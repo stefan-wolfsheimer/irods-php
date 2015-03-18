@@ -147,7 +147,10 @@ class RODSConn {
             }
 
             // all good ... do the PAM authentication over the encrypted connection
-            $req_packet = new RP_pamAuthRequestInp($user, $pass, -1);
+
+            // FIXME: '24', the TTL in hours, should be a configuration option.
+            $req_packet = new RP_pamAuthRequestInp($user, $pass, 24);
+
             $msg = new RODSMessage("RODS_API_REQ_T", $req_packet, $GLOBALS['PRODS_API_NUMS']['PAM_AUTH_REQUEST_AN']);
             fwrite($conn, $msg->pack());
             $msg = new RODSMessage();
