@@ -142,6 +142,7 @@ class RODSConn {
                 throw new RODSException("Connection to '$host:$port' failed.ssl1. User: $user Zone: $zone", $GLOBALS['PRODS_ERR_CODES_REV']["$intInfo"]);
             }
             // Turn on SSL on our side
+			stream_set_blocking ($conn, true);
             if (!stream_socket_enable_crypto($conn, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
                 throw new RODSException("Error turning on SSL on connection to server '$host:$port'.");
             }
