@@ -142,8 +142,11 @@ class RODSConn {
                 throw new RODSException("Connection to '$host:$port' failed.ssl1. User: $user Zone: $zone", $GLOBALS['PRODS_ERR_CODES_REV']["$intInfo"]);
             }
             // Turn on SSL on our side
-			stream_set_blocking ($conn, true);
-            if (!stream_socket_enable_crypto($conn, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+// TSM Feb 2016: changed crypto method from TLS_CLIENT to SSLv23_CLIENT  because iRODS4.1 expects at least TLS1.2
+//               in PHP 5.4 the TLS_CLIENT will NOT negotiate TLS 1.2 where SSLv23 does so.
+//               see https://bugs.php.net/bug.php?id=65329
+ 
+            if (!stream_socket_enable_crypto($conn, true, STREAM_CRYPTO_METHOD_SSLv23_CLIENT)) {
                 throw new RODSException("Error turning on SSL on connection to server '$host:$port'.");
             }
 
