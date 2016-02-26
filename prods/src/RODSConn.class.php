@@ -180,16 +180,23 @@ class RODSConn {
             // De-activate SSL on the connection
             stream_socket_enable_crypto($conn, false);
 
-            // nasty hack ... some characters are left over to be read
-            // from the socket after the SSL shutdown, and I can't 
-            // figure out how to consume them via SSL routines, so I
-            // just read them and throw them away. They need to be consumed
-            // or later reads get out of sync with the API responses
-            $r = array($conn);
-            $w = $e = null;
-            while (stream_select($r, $w, $e, 0) > 0) {
-                $s = fread($conn, 1);
-            }
+            // CJS: For whatever reason some trash is left over for us
+            // to read after the SSL shutdown.
+            // We need to read and discard those bytes so they don't
+            // get in the way of future API responses.
+            //
+            // There used to be a while(select() > 0){fread(1)} loop
+            // here, but that proved to be unreliable, most likely
+            // because sometimes not all trash bytes have yet been
+            // received at that point. This caused PAM logins to fail
+            // randomly.
+            //
+            // The following fread() call reads all remaining bytes in
+            // the current packet (or so it seems).
+            //
+            // Testing shows there's always exactly 31 bytes to read.
+
+            fread($conn, 1024);
         }
 
         // request authentication
