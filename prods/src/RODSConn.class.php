@@ -1191,10 +1191,10 @@ class RODSConn {
      *    - 'port' remote port
      *    - 'zone' remote zone
      *    if any of the value is empty, this option will be ignored.
-     * @param RODSKeyValPair $options an RODSKeyValPair specifying additional options, purpose of this is unknown at the developement time. Leave it alone if you are as clueless as me...
+     * @param array $options an array specifying additional options, purpose of this is unknown at the developement time. Leave it alone if you are as clueless as me...
      * @return an associative array. Each array key is the lable, and each array value's type will depend on the type of $out_param, at this moment, only string and RODSKeyValPair are supported
      */
-    public function execUserRule($rule_body, array $inp_params = array(), array $out_params = array(), array $remotesvr = array(), RODSKeyValPair $options = null) {
+    public function execUserRule($rule_body, array $inp_params = array(), array $out_params = array(), array $remotesvr = array(), array $options = array()) {
         $inp_params_packets = array();
         foreach ($inp_params as $inp_param_key => $inp_param_val) {
             if (is_a($inp_param_val, 'RODSKeyValPair')) {
@@ -1215,10 +1215,7 @@ class RODSConn {
             $remotesvr_packet = new RP_RHostAddr();
         }
 
-        if (!isset($options))
-            $options = new RODSKeyValPair();
-
-        $options_packet = $options->makePacket();
+        $options_packet = new RODSKeyValPair($options)->makePacket();
 
         $pkt = new RP_ExecMyRuleInp($rule_body, $remotesvr_packet, $options_packet, $out_params_desc, $inp_param_arr_packet);
         $msg = new RODSMessage("RODS_API_REQ_T", $pkt, $GLOBALS['PRODS_API_NUMS']['EXEC_MY_RULE_AN']);

@@ -27,21 +27,18 @@ class ProdsRule
      *    - 'port' remote port
      *    - 'zone' remote zone
      *    if any of the value is empty, this option will be ignored.
-     * @param RODSKeyValPair $options an RODSKeyValPair specifying additional options, purpose of this is unknown at the developement time. Leave it alone if you are as clueless as me...
+     * @param array $options an array specifying additional options, purpose of this is unknown at the developement time. Leave it alone if you are as clueless as me...
      */
     public function __construct(RODSAccount $account, $rule_body,
                                 array $inp_params = array(), array $out_params = array(),
-                                array $remotesvr = array(), RODSKeyValPair $options = null)
+                                array $remotesvr = array(), array $options = array())
     {
         $this->account = $account;
         $this->rule_body = $rule_body;
         $this->inp_params = $inp_params;
         $this->out_params = $out_params;
         $this->remotesvr = $remotesvr;
-        if (isset($options))
-            $this->options = $options;
-        else
-            $this->options = new RODSKeyValPair();
+        $this->options = $options;
     }
 
     /**
@@ -52,7 +49,7 @@ class ProdsRule
     {
         $conn = RODSConnManager::getConn($this->account);
         $result = $conn->execUserRule($this->rule_body, $this->inp_params,
-            $this->out_params, $this->remotesvr, $this->options = null);
+            $this->out_params, $this->remotesvr, $this->options);
         RODSConnManager::releaseConn($conn);
 
         return $result;
