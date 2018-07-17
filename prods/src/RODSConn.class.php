@@ -1215,7 +1215,7 @@ class RODSConn {
             $remotesvr_packet = new RP_RHostAddr();
         }
 
-        $options_packet = new RODSKeyValPair($options)->makePacket();
+        $options_packet = (new RODSKeyValPair($options))->makePacket();
 
         $pkt = new RP_ExecMyRuleInp($rule_body, $remotesvr_packet, $options_packet, $out_params_desc, $inp_param_arr_packet);
         $msg = new RODSMessage("RODS_API_REQ_T", $pkt, $GLOBALS['PRODS_API_NUMS']['EXEC_MY_RULE_AN']);
