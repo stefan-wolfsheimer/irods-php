@@ -1,8 +1,6 @@
 <?php
-$RODS_tree_root = dirname(__FILE__) . "/../../..";
-
-$capi_error_table_file = $RODS_tree_root . "/lib/core/include/rodsErrorTable.h";
-$prods_error_table_file = $RODS_tree_root . "/clients/prods/src/RodsErrorTable.inc.php";
+$capi_error_table_file = "rodsErrorTable.h";
+$prods_error_table_file = "RodsErrorTable.inc.php";
 
 // Add more error code here, if you wish. It will be added to the default
 // RODS error code. Note that these errors code are for web server/client
@@ -15,7 +13,13 @@ $new_error_codes = array(
     array("PERR_UNSUPPORTED_PROTOCOL_SCHEME", -3103000),
     array("PERR_USER_INPUT_ERROR", -3104000),
     array("PERR_USER_INPUT_PATH_ERROR", -3105000),
-    array("PERR_CONN_NOT_ACTIVE", -3106000)
+    array("PERR_CONN_NOT_ACTIVE", -3106000),
+    // TODO: Decide if adding RULE_CUSTOM_FATAL_ERROR code below is the best solution.
+    // This custom error is introduced in order to preserve the '-1' value in the RODSException->code.
+    // Without the custom error being stated below, RODSConn.class.php line 1374 errors with an undefined offset and
+    // cannot lookup the corresponding codeAttr. As a result, the value of RODSException->code will then be set to '0',
+    // while we expect '-1' in subsequent pacman code.
+    array("RULE_CUSTOM_FATAL_ERROR", -1)
 );
 
 $value_pairs = array();
@@ -24,21 +28,14 @@ $lines = explode("\n", file_get_contents($capi_error_table_file));
 
 foreach ($lines as $line) {
     if (strlen($line) < 8) continue;
-    if (substr($line, 0, 7) == '#define') {
-        $rest = trim(substr($line, 7));
-        $tokens = preg_split("/\s+/", $rest);
-        if (count($tokens) < 2)
+    if (substr($line, 0, 10) == 'NEW_ERROR(') {
+        $rest = trim(substr($line, 10, -1));
+        preg_match("/([A-Z_]+),\s+([-0-9]+)/", $rest, $tokens);
+        if (count($tokens) != 3)
             continue;
-        $val1 = NULL;
-        $val2 = NULL;
-        foreach ($tokens as $token) {
-            if (strlen($token) > 3) {
-                if (empty($val1)) $val1 = trim($token);
-                else $val2 = trim($token);
-            }
-        }
-        if ((!empty($val1)) && (!empty($val2))) {
-            array_push($value_pairs, array($val1, $val2));
+
+        if ( !empty($tokens[1]) && !empty($tokens[2]) ) {
+            array_push($value_pairs, array($tokens[1], $tokens[2]));
         }
     }
 }
@@ -57,7 +54,7 @@ $outputstr = $outputstr . '$GLOBALS[\'PRODS_ERR_CODES\']=array(' . "\n";
 foreach ($value_pairs as $value_pair) {
     $val1 = $value_pair[0];
     $val2 = $value_pair[1];
-    $outputstr = $outputstr . "  '$val1' => '$val2',\n";
+    $outputstr = $outputstr . "    '$val1' => '$val2',\n";
 }
 $outputstr = $outputstr . ");\n";
 
@@ -65,7 +62,7 @@ $outputstr = $outputstr . '$GLOBALS[\'PRODS_ERR_CODES_REV\']=array(' . "\n";
 foreach ($value_pairs as $value_pair) {
     $val1 = $value_pair[0];
     $val2 = $value_pair[1];
-    $outputstr = $outputstr . "  '$val2' => '$val1',\n";
+    $outputstr = $outputstr . "    '$val2' => '$val1',\n";
 }
 $outputstr = $outputstr . ");\n";
 
