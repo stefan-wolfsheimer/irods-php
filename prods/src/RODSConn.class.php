@@ -904,6 +904,11 @@ class RODSConn {
             $api_num = $GLOBALS['PRODS_API_NUMS']['DATA_OBJ_OPEN_AN'];
         }
 
+        if($file_exists === false) {
+                throw new RODSException("trying to open a file '$path' " .
+                "which does not exists with mode '$mode' ", "PERR_USER_INPUT_ERROR");
+        }
+
         $msg = new RODSMessage("RODS_API_REQ_T", $dataObjInp_pk, $api_num);
         fwrite($this->conn, $msg->pack()); // send it
         // get value back
