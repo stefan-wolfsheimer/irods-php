@@ -1,0 +1,16 @@
+{
+    "name": "maastrichtuniversity/irods-php",
+    "description": "A fork of the DICE-UNC iRODS PHP API ",
+    "keywords": ["irods","php"],
+    "homepage": "https://github.com/MaasrichtUniversity/irods-php",
+    "type": "library",
+    "license": "BSD",
+    "require-dev": {
+        "php": ">=5.3.0",
+        "phpunit/phpunit":"4.2.*",
+        "phpunit/phpunit-skeleton-generator":"2.0.1"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}

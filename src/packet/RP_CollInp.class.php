@@ -1,0 +1,15 @@
+<?php
+
+class RP_CollInp extends RODSPacket
+{
+    public function __construct($collName = "",
+                                RP_KeyValPair $KeyValPair_PI = NULL)
+    {
+        if (!isset($KeyValPair_PI)) $KeyValPair_PI = new RP_KeyValPair();
+
+        $packlets = array("collName" => $collName, "flags" => "0", "oprType"=>"0",
+            'KeyValPair_PI' => $KeyValPair_PI);
+        parent::__construct("CollInpNew_PI", $packlets);
+    }
+
+}
