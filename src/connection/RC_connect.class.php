@@ -299,10 +299,16 @@ trait RC_connect {
                 $ssl_opts['ssl']['verify_peer'] = strcasecmp("none", $ssl_conf['verify_server']) != 0;
             }
 
+            if (array_key_exists('verify_peer_name', $ssl_conf)) {
+                $ssl_opts['ssl']['verify_peer_name'] = strcasecmp("true", $ssl_conf['verify_peer_name']) == 0;
+            } elseif (array_key_exists('verify_server', $ssl_conf)) {
+                // from json environment
+                // none -> SSL_VERIFY_NONE; cert or hostname -> SSL_VERIFY_PEER
+                $ssl_opts['ssl']['verify_peer_name'] = strcasecmp("none", $ssl_conf['verify_server']) != 0;
+            }
+
             if (array_key_exists('allow_self_signed', $ssl_conf)) {
-                if (strcasecmp("true", $ssl_conf['allow_self_signed']) == 0) {
-                    $ssl_opts['ssl']['allow_self_signed'] = true;
-                }
+                $ssl_opts['ssl']['allow_self_signed'] = strcasecmp("true", $ssl_conf['allow_self_signed']) == 0;
             }
 
             /* cafile */
