@@ -32,7 +32,7 @@ class RODSGenQueSelFlds
                 throw new RODSException("General Query select field name '$name' is not valid", 'PERR_USER_INPUT_ERROR');
             }
             $this->indexes[] = $GLOBALS['PRODS_GENQUE_NUMS'][$name];
-            if (isset($this->attrs, $i)) {
+            if (isset($this->attrs, $i) && isset($attrs[$i])) {
                 $this->attrs[$i] = RODSGenQueSelFlds::attr2GenQueNumber($attrs[$i]);
             } else {
                 $this->attrs[$i] = 1;
