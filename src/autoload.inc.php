@@ -6,7 +6,7 @@ define("CLASS_DIR", dirname(__FILE__));
  * @uses classFolder()
  * @param $className string
  */
-function __autoload($className) {
+function autoload($className) {
    $folder = classFolder($className);
 
    if($folder)
@@ -40,6 +40,6 @@ function classFolder($className, $sub = "/") {
    return false;
 }
 
-spl_autoload_register('__autoload');
+spl_autoload_register('autoload');
 
 ?>
