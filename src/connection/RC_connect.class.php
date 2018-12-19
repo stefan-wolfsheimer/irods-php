@@ -356,7 +356,7 @@ trait RC_connect {
 
         $opts = stream_context_get_options($this->conn);
         if (array_key_exists('ssl', $opts)) {
-            debug(10, "SSL connection stream context options ", stream_get_meta_data($$this->conn));
+            debug(10, "SSL connection stream context options ", stream_get_meta_data($this->conn));
         } else {
             debug(10, "Failed to get SSL connection stream context options. All options ", $opts);
             throw new RODSException("Failed to get SSL connection stream context options: assuming SSL failed");
