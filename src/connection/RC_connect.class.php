@@ -284,7 +284,6 @@ trait RC_connect {
             'ciphers' => SSL_CIPHER_LIST,
             'crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
             'single_dh_use' => true,
-            'capture_session_meta' => true, // allows context inspection
         ));
 
         if (array_key_exists('ssl', $GLOBALS['PRODS_CONFIG'])) {
@@ -357,7 +356,7 @@ trait RC_connect {
 
         $opts = stream_context_get_options($this->conn);
         if (array_key_exists('ssl', $opts)) {
-            debug(10, "SSL connection stream context options ", $opts['ssl']['session_meta']);
+            debug(10, "SSL connection stream context options ", stream_get_meta_data($$this->conn));
         } else {
             debug(10, "Failed to get SSL connection stream context options. All options ", $opts);
             throw new RODSException("Failed to get SSL connection stream context options: assuming SSL failed");
