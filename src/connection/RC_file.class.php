@@ -396,7 +396,7 @@ trait RC_file {
      */
     public function fileSeek($l1desc, $offset, $whence = SEEK_SET) {
         $openedDataObjInp = new RP_OpenedDataObjInp($l1desc, 0, $offset, $whence);
-        $msg = new RODSMessage("RODS_API_REQ_T", $openedDataObjInp, $GLOBALS['PRODS_API_NUMS']['DATA_OBJ_SEEK_AN']);
+        $msg = new RODSMessage("RODS_API_REQ_T", $openedDataObjInp, $GLOBALS['PRODS_API_NUMS']['DATA_OBJ_LSEEK_AN']);
 
         fwrite($this->conn, $msg->pack()); // send it
         $msg = new RODSMessage();
