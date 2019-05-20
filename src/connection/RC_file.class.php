@@ -97,7 +97,7 @@ trait RC_file {
                 array("COL_DATA_NAME", "COL_D_DATA_ID", "COL_DATA_TYPE_NAME",
             "COL_D_RESC_NAME", "COL_DATA_SIZE", "COL_D_OWNER_NAME", "COL_D_OWNER_ZONE",
             "COL_D_CREATE_TIME",
-            "COL_D_MODIFY_TIME", "COL_D_COMMENTS"), $cond, array(), 0, 1, false);
+            "COL_D_MODIFY_TIME", "COL_D_COMMENTS"), $cond, array(), 0, 2, false);
         if ($que_result === false)
             return false;
 
